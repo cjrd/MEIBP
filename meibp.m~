@@ -134,15 +134,13 @@ while ~converge % TODO make sure this is larger than data block size
         %-----------------------%
         % comp_res(end+1,:)
         newZn = local_search_opt(model, aux, X(n,:), n);
-       
-        % update A if Zn changed and __ is true
+        % [newZn, ~] = zn_opt(model, aux, n, X(n,:), params.max_opts);
         if ~isequal(newZn, model.Z(n,:))
             zn_diff = newZn - model.Z(n,:);
             aux.mks(1,:) = aux.mks(1,:) + zn_diff;
             new_k2 = double(newZn)'*double(newZn);  %  Z should be sparse
             old_k2 = double(model.Z(n,:))'*double(model.Z(n,:));  %  Z should be sparse
             model.Z(n,:) = newZn;
-            
             % update ZtZ
             update_mat(1,:,:) = new_k2 - old_k2;
             aux.ZtZ(1,:,:) = aux.ZtZ(1,:,:) + update_mat(1,:,:);
@@ -176,7 +174,7 @@ while ~converge % TODO make sure this is larger than data block size
         end
     end
     
-    %%% add more data if in block mode
+    %%% add more data
     if params.data_blocks && blk_idx <= size(Xfull, 1)
         endval = min(size(Xfull, 1), (blk_idx + params.data_block_size));
         X = [X; Xfull(blk_idx:endval, :)];
@@ -197,7 +195,9 @@ while ~converge % TODO make sure this is larger than data block size
         aux.Ex_A = [aux.Ex_A; zeros(1, model.D)];
         aux.Ex_Asq = [aux.Ex_Asq; zeros(1, model.D)];
         model.K = model.K + 1;
-        % update params fo rnew feature
+        %%%%%%%%%%%%%%%%%
+        % Update Params %
+        %%%%%%%%%%%%%%%%%
         [model, aux] = update_tg(model, aux);
     end
     times(ii) = toc(stime); % TODO make verbose option (save timing in an aux vector as well)
@@ -230,7 +230,6 @@ while ~converge % TODO make sure this is larger than data block size
     
     % update console display
     fprintf('K: %-3i vlb: %6.3f conv: %0.5f itr time %0.3f, tll %0.3e \n', model.K, aux.vlb(end), conv_meas, times(ii),eval_res.ll(ii));
-    
     ii = ii + 1;
     if params.use_runtime
         if params.max_runtime < tot_runtime
@@ -240,8 +239,6 @@ while ~converge % TODO make sure this is larger than data block size
     stime=tic;
 end
 fprintf('\ntotal inference time: %0.2fs for N=%i \n\n', tot_runtime, model.N);
-
-% output the MEIBP results
 eval_res.l2 = eval_res.l2(~isnan(eval_res.l2));
 eval_res.ll = eval_res.ll(~isnan(eval_res.ll));
 aux.eval_res = eval_res;
