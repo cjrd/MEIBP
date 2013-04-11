@@ -15,8 +15,8 @@ do_visualization = true;
 sk = [];
 
 % data: example binary image data with 4 latent features
-N = 200;
-sigX = 0.1; % high data noise (see visualization)
+N = 2000;
+sigX = 0.5; % high data noise (see visualization)
 gmodel = gen_ibp_data(N, 'sigX', sigX);
 
 % 0-min the data
