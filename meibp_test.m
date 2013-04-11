@@ -110,7 +110,7 @@ if do_visualization
         subplot(1,4,i)
         sanePColor(reshape(gmodel.A(i,:), sqdim, sqdim))
         if i ==1
-%             title('true features')
+            title('true features')
         end
         set(gca,'xtick',[]);
         set(gca,'ytick',[]);
