@@ -14,7 +14,6 @@ do_visualization = true;
 % set random seed (Change me to examine different data/initializations)
 sk = [];
 
-rng shuffle;
 % data: example binary image data with 4 latent features
 N = 200;
 sigX = 0.1; % high data noise (see visualization)

@@ -7,7 +7,7 @@ function [logP_in logP_out] = uncoll_llhood( z , x , sigma_x , mA , pA , param_s
 % z: latent feature matrix
 % x: input data matrix
 % sigma_x: data std of for linear-Gaussian IBP model
-$ mA: mean values for the linear-Gaussian IBP model
+% mA: mean values for the linear-Gaussian IBP model
 % pA: cov values for the linear-Gaussian IBP model
 % param_set: param_set for the linear-Gaussian IBP model
 % unnorm_set: set of unnormalization parameters incase data has been scaled/tranlated
