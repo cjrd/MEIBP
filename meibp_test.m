@@ -12,11 +12,12 @@ addpath('utils');
 do_visualization = true;
 
 % set random seed (Change me to examine different data/initializations)
-rng shuffle;
+sk = [];
 
+rng shuffle;
 % data: example binary image data with 4 latent features
-N = 5000;
-sigX = 3/4; % high data noise (see visualization)
+N = 200;
+sigX = 0.1; % high data noise (see visualization)
 gmodel = gen_ibp_data(N, 'sigX', sigX);
 
 % 0-min the data
@@ -29,7 +30,7 @@ test_mask = zeros(size(gmodel.X)); % can make sparse for large data (advantageou
 %-----------------------%
 
 % initialization parameters
-kinit = 12; % set initial upper-bound on number of latent features (true number is 4)
+kinit = 20; % set initial upper-bound on number of latent features (true number is 4)
 Z_init_per = 1/3; % percentage of Z entries to randomly set equal to 1 (random initialization)
 
 % specify which IBP prior to use
@@ -107,11 +108,13 @@ if do_visualization
     figure(fnum)
     fnum = fnum + 1;
     for i=1:4
-        subplot(2,2,i)
-        imagesc(reshape(gmodel.A(i,:), sqdim, sqdim))
+        subplot(1,4,i)
+        sanePColor(reshape(gmodel.A(i,:), sqdim, sqdim))
         if i ==1
-            title('true features')
+%             title('true features')
         end
+        set(gca,'xtick',[]);
+        set(gca,'ytick',[]);
         grid off
     end
     
