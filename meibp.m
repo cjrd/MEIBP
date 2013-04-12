@@ -5,7 +5,7 @@ function rr_res=meibp(X, params)
 % where Z ~ IBP, A ~ TruncatedGaussian, and e is Gaussian white noise.
 % C. Reed & Z. Ghahramani (2013)
 % Scaling the Indian Buffet Process via Submodular Maximization
-% http://www.arxiv.org/TODO
+% http://www.arxiv.org/abs/1304.3285
 %
 % X is the observed data matrix with N instances with D dimensions
 % params is a struct with the following options (see meibp_test.m for example usage)

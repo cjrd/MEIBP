@@ -20,7 +20,7 @@ This software is open-source, released under the terms of the The MIT License (s
 
 [1] 
 Scaling the Indian Buffet Process via Submodular Maximization
-Colorado Reed and Zoubin Ghahramani, http://arxiv.org/abs/TODO
+Colorado Reed and Zoubin Ghahramani, http://arxiv.org/abs/1304.3285
 
 [2]
 Infinite latent feature models and the Indian buffet process

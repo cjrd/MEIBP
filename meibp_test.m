@@ -2,7 +2,7 @@
 %
 % C. Reed & Z. Ghahramani (2013)
 % Scaling the Indian Buffet Process via Submodular Maximization
-% http://www.arxiv.org/TODO
+% http://www.arxiv.org/abs/1304.3285
 %
 % author: Colorado Reed, gmail address: colorado.j.reed
 
@@ -23,6 +23,7 @@ gmodel = gen_ibp_data(N, 'sigX', sigX);
 
 % mask some test data
 test_mask = zeros(size(gmodel.X)); % can make sparse for large data (advantageous for N > 10^6)
+test_mask(N-round(N/4), 1:round(gmodel.D)/4); 
 
 %-----------------------%
 %      Parameters       %
