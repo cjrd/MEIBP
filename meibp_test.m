@@ -109,7 +109,7 @@ if do_visualization
     fnum = fnum + 1;
     for i=1:4
         subplot(1,4,i)
-        sanePColor(reshape(gmodel.A(i,:), sqdim, sqdim))
+        imagesc(reshape(gmodel.A(i,:), sqdim, sqdim))
         if i ==1
             title('true features')
         end
