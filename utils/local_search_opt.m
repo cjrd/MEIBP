@@ -5,7 +5,7 @@ function testvec = local_search_opt(model, aux, Xn, n)
 % for the MEIBP model descibed in
 % C. Reed & Z. Ghahramani (2013)
 % Scaling the Indian Buffet Process via Submodular Maximization
-% http://www.arxiv.org/TODO
+% http://www.arxiv.org/abs/1304.3285
 %
 % INPUT
 % model: MEIBP inference model object
@@ -100,9 +100,7 @@ while true
                 testvec(maxk) = 0;
                 combtots = combtots - W(maxk,:);
                 tot_diff = tot_diff - maxval;
-                if isempty(curset)
-                    break
-                end
+                break
             end
         end
     end % end up/down pass loop

@@ -18,6 +18,7 @@ function rr_res=meibp(X, params)
 %     'sigA', Gaussian Hyperparameter (latent feature noise)
 %     'use_runtime', whether to use an upperbound on inference time
 %     'max_runtime', the upperbound on inference time
+%     'numll', number of samples to use for ll computation
 %     'chk_conv', whether to check for model convergence
 %     'conv_method', check for convergence using the variational lower bound 'vlb' or training log likelihood 'tll'
 %     'conv_thresh', relative difference in conv_method that indicates convergence
@@ -27,6 +28,7 @@ function rr_res=meibp(X, params)
 %     'exch_ec', % specify true to use the lof IBP prior or false to use shifted equivalence class prior
 %     'rand_n_order', set 'true' to update the instances randomly or false to update the instances sequentially
 %     'update_a_each_zn', 'true' updates the A variational distributiona after each Z_n optimization (slower but performs much better in practice)
+%     'opt_alg', 'greedy' for linear greedy addition of cody et al, else performs local search
 %     );
 %
 % author: Colorado Reed, gmail address: colorado.j.reed
@@ -130,6 +132,8 @@ for rr = 1:params.num_restarts
     ii =1;
     tot_runtime = 0;
     stime = tic;
+    half_better_tot = 0;
+    tot_opt = 0;
     while ~converge 
         fprintf('iteration %d \n',ii);
 
@@ -143,7 +147,6 @@ for rr = 1:params.num_restarts
             %-----------------------%
             %    Optimization       %
             %-----------------------%
-            % comp_res(end+1,:)
             newZn = local_search_opt(model, aux, X(n,:), n);
             
             % update A if Zn changed 
@@ -197,7 +200,26 @@ for rr = 1:params.num_restarts
         %   ERROR EVAL  %
         %%%%%%%%%%%%%%%%%
         eval_res.l2(ii) = ibp_error_eval(Xtotal, model.Z*aux.Ex_A, aux.test_mask);
-        [eval_res.ll_train(ii),eval_res.ll(ii)] =  uncoll_llhood(model.Z , Xtotal, model.sigX , aux.Ex_A , [] , params);
+        if params.numll==1
+            % use the mean for 1 sample estimates
+            [eval_res.ll_train(ii),eval_res.ll(ii)] =  uncoll_llhood(model.Z , Xtotal, model.sigX , aux.Ex_A , [] , params);
+        else
+            tmp_ll_train = nan(1, params.numll);
+            tmp_ll = nan(1, params.numll);
+            adraws = nan(numel(aux.Ex_A), params.numll);
+            astds = sqrt(aux.Ex_Asq - aux.Ex_A.^2);
+            for anum=1:numel(aux.Ex_A)
+               adraws(anum,:) = randraw('normaltrunc', [0, inf, aux.Ex_A(anum), astds(anum)], params.numll);
+            end
+            
+            for nlli=1:params.numll
+                adraw = reshape(adraws(:,nlli), size(aux.Ex_A));
+                [tmp_ll_train(nlli), tmp_ll(nlli)] = uncoll_llhood(model.Z , Xtotal, model.sigX , adraw , [] , params);
+            end
+            eval_res.ll_train(ii) = log_mean(tmp_ll_train);
+            eval_res.ll(ii) = log_mean(tmp_ll);
+        end
+        
         
         % record vlb, check for convergence, print updates
         aux.vlb(aux.vlb_ct) = compute_vlb(X, model, aux);
@@ -242,6 +264,7 @@ for rr = 1:params.num_restarts
     fprintf('\ntotal inference time: %0.2fs for N=%i \n\n', tot_runtime, model.N);
     eval_res.l2 = eval_res.l2(~isnan(eval_res.l2));
     eval_res.ll = eval_res.ll(~isnan(eval_res.ll));
+    eval_res.ll_train = eval_res.ll_train(~isnan(eval_res.ll_train));
     aux.eval_res = eval_res;
     aux.times = times(~isnan(times));
     aux.final_its = ii -1;
