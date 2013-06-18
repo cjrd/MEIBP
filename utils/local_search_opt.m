@@ -7,6 +7,7 @@ function testvec = local_search_opt(model, aux, Xn, n)
 % Scaling the Indian Buffet Process via Submodular Maximization
 % http://www.arxiv.org/abs/1304.3285
 %
+%
 % INPUT
 % model: MEIBP inference model object
 % aux: MEIBP inference aux object
@@ -61,7 +62,7 @@ tot_diff = initmax;
 testvec(initk) = 1;
 combtots = omegan + W(initk,:);
 % initializtion
-TOL = 1e-6; % TODO make this an option
+TOL = 0; % TODO make this an option
 curset = initk;
 unadd_vals = kvals; %sfo_setdiff_fast(inset, curset);
 unadd_vals(initk) = [];
@@ -100,7 +101,7 @@ while true
                 testvec(maxk) = 0;
                 combtots = combtots - W(maxk,:);
                 tot_diff = tot_diff - maxval;
-                break
+                break % can remove this and still have a valid algorithm
             end
         end
     end % end up/down pass loop
