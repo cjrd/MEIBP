@@ -74,5 +74,5 @@ else
 end
 
 % TODO: combine code to generate from IBP prior rather than hand coding
-gendata.Z = rand(gendata.N, gendata.K) > gendata.Zprob; 
+gendata.Z = rand(gendata.N, gendata.K) < gendata.Zprob; 
 gendata.X = gendata.Z*gendata.A + gendata.sigX.*randn(gendata.N, gendata.D);
