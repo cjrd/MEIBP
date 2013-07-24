@@ -36,7 +36,7 @@ if aux.exch_ec
         khtrm = sum(aux.gammaln_mat(khcts+1));
     end
 else
-    khtrm = aux.gammaln_mat(Kplus+1);
+    khtrm = aux.gammaln_mat(Kplus+1); 
 end
     vlb_ibp = Kplus*log(model.alpha) - Kplus*aux.gammaln_mat(N+1) - model.alpha*aux.Hn ...
         + sum(aux.gammaln_mat(n_mks(Kplus_idx)+1) + aux.gammaln_mat(aux.mks(1,Kplus_idx))) - khtrm;

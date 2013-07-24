@@ -6,7 +6,7 @@ function vllh = compute_vllh(Xtr, model, aux)
 tmp1 = (model.Z * aux.Ex_A).^2;
 tmp2 = model.Z * (aux.Ex_A.^2); 
 if aux.has_test
-    tmp1(aux.test_mask) = 0;
+    tmp1(aux.test_mask) = 0; 
     tmp2(aux.test_mask) = 0;
 end
 vllh = 1/model.sigX^2*( sum(sum((Xtr * aux.Ex_A') .* model.Z))...

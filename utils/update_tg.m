@@ -27,7 +27,7 @@ if aux.has_test
     len_deqc = length(aux.d_eqc);
 else
     len_deqc = 0;
-end
+end 
 zero_upvals = zeros(1,aux.exa_uplag) + NaN;
 upvals = zero_upvals;
 exa_ct = 0;
